@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
+apply plugin: 'jetty'
 
 task createJavaProject << {       
    sourceSets*.java.srcDirs*.each { it.mkdirs() }       
@@ -12,3 +13,25 @@ task createWebProject(dependsOn: 'createJavaProject') << {
   webAppDir.mkdirs()
 }
 
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile(
+            'commons-logging:commons-logging:1.2',
+            'org.springframework:spring-aop:4.2.4.RELEASE',
+            'org.springframework:spring-beans:4.2.4.RELEASE',
+            'org.springframework:spring-context:4.2.4.RELEASE',
+            'org.springframework:spring-core:4.2.4.RELEASE',
+            'org.springframework:spring-expression:4.2.4.RELEASE',
+            'org.springframework:spring-web:4.2.4.RELEASE',
+            'org.springframework:spring-webmvc:4.2.4.RELEASE'
+    )
+    runtime("jstl:jstl:1.2")
+}
+
+task copyJars(type: Copy) {
+    from configurations.runtime
+    into 'lib'
+}
